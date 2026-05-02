@@ -1,0 +1,41 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  background: radial-gradient(circle at top right, rgba(127, 53, 101, 0.08), transparent 34%), var(--bg);
+  font-family: 'Manrope', sans-serif;
+  line-height: 1.55;
+  transition: background-color 0.35s ease, color 0.35s ease;
+  overflow-x: hidden;
+  position: relative;
+  width: 100vw;
+}
+
+img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+h1,
+h2,
+h3,
+.brand {
+  font-family: 'Cormorant Garamond', serif;
+  letter-spacing: 0.02em;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}

@@ -1,0 +1,209 @@
+@media (max-width: 980px) {
+  .rooms__grid,
+  .gallery__grid,
+  .amenities__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .about__grid,
+  .booking__grid,
+  .contacts__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .menu-toggle {
+    display: inline-flex;
+  }
+
+  .nav {
+    position: absolute;
+    top: 74px;
+    right: 4%;
+    width: min(280px, 92vw);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 14px;
+    display: none;
+  }
+
+  .nav.open {
+    display: flex;
+  }
+
+  .hero {
+    min-height: 88vh;
+  }
+
+  .section {
+    padding: 76px 0;
+  }
+
+  .rooms__grid,
+  .gallery__grid,
+  .amenities__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .room-card__footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Mobile optimizations */
+  body,
+  html {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  .container {
+    max-width: 100%;
+    padding: 0 16px;
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+    min-height: 44px;
+  }
+
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Touch-friendly spacing */
+  .btn {
+    padding: 14px 20px;
+  }
+
+  /* Prevent zoom on input focus on iOS */
+  input,
+  textarea {
+    font-size: 16px;
+  }
+
+  /* Admin panel mobile */
+  .admin-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-btn-logout {
+    width: 100%;
+  }
+
+  .admin-card {
+    padding: 12px;
+  }
+
+  .admin-delete-btn {
+    padding: 6px;
+  }
+
+  /* Responsive text sizes */
+  h1 {
+    font-size: 24px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  h3 {
+    font-size: 18px;
+  }
+
+  /* Forms */
+  .booking-form__input,
+  .booking-form__textarea {
+    padding: 14px;
+    font-size: 16px;
+  }
+
+  /* Prevent horizontal scroll */
+  * {
+    max-width: 100%;
+  }
+
+  /* Image optimization */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 48px 0;
+  }
+
+  .container {
+    padding: 0 12px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  h3 {
+    font-size: 16px;
+  }
+
+  .btn {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  /* Admin tabs for small screens */
+  .admin-tabs {
+    overflow-x: auto;
+    gap: 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .admin-tab-btn {
+    padding: 10px 14px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  /* Flexible columns */
+  .admin-card-header {
+    flex-direction: column;
+  }
+
+  /* Text reduction for small screens */
+  p {
+    font-size: 14px;
+  }
+
+  .admin-card-info p {
+    font-size: 12px;
+  }
+
+  /* Spacing adjustments */
+  .admin-form-group {
+    margin-bottom: 12px;
+  }
+
+  /* Prevent double tap zoom */
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  textarea {
+    font-size: 16px;
+  }
+}
+

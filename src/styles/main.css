@@ -1,0 +1,17 @@
+@import url('./tokens.css');
+@import url('./base.css');
+@import url('./layout.css');
+@import url('./components/header.css');
+@import url('./components/buttons.css');
+@import url('./components/cards.css');
+@import url('./components/form.css');
+@import url('./components/lightbox.css');
+@import url('./sections/hero.css');
+@import url('./sections/about.css');
+@import url('./sections/rooms.css');
+@import url('./sections/booking.css');
+@import url('./sections/gallery.css');
+@import url('./sections/amenities.css');
+@import url('./sections/contacts.css');
+@import url('./utilities/animations.css');
+@import url('./utilities/responsive.css');

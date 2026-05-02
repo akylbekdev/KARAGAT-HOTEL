@@ -1,0 +1,24 @@
+:root {
+  --bg: #fdfcfc;
+  --bg-soft: #f6f2f3;
+  --text: #1b1719;
+  --muted: #5d5258;
+  --accent: #6d1f3d;
+  --accent-2: #7f3565;
+  --card: #ffffff;
+  --border: rgba(27, 23, 25, 0.1);
+  --shadow: 0 14px 40px rgba(33, 16, 24, 0.14);
+  --radius: 18px;
+}
+
+body.dark {
+  --bg: #121014;
+  --bg-soft: #1a161d;
+  --text: #f5edf0;
+  --muted: #b7aab0;
+  --accent: #c75a84;
+  --accent-2: #b06cd2;
+  --card: #1d1820;
+  --border: rgba(245, 237, 240, 0.16);
+  --shadow: 0 16px 42px rgba(0, 0, 0, 0.35);
+}

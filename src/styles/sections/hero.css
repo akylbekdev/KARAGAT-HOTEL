@@ -1,0 +1,42 @@
+.hero {
+  min-height: 96vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-image: linear-gradient(100deg, rgba(18, 12, 16, 0.68), rgba(36, 13, 29, 0.32)),
+    url('https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=1950&q=80');
+  background-position: center;
+  background-size: cover;
+  color: #fff;
+}
+
+.hero__content {
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
+  padding-top: 80px;
+}
+
+.hero__eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.75rem;
+  opacity: 0.82;
+}
+
+.hero h1 {
+  font-size: clamp(2.4rem, 6vw, 5rem);
+  margin-bottom: 12px;
+}
+
+.hero__subtitle {
+  font-size: clamp(1rem, 2.1vw, 1.18rem);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.hero__actions {
+  margin-top: 28px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}

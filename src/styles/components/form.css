@@ -1,0 +1,43 @@
+.booking-form {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: var(--shadow);
+}
+
+.booking-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.booking-form input {
+  width: 100%;
+  margin-top: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 12px;
+  font: inherit;
+}
+
+.booking-form input:focus {
+  outline: 2px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  border-color: var(--accent);
+}
+
+.form-message {
+  min-height: 24px;
+  margin: 12px 0 0;
+  font-weight: 700;
+}
+
+.form-message.error {
+  color: #c62828;
+}
+
+.form-message.success {
+  color: #1f7a3d;
+}

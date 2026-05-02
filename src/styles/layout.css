@@ -1,0 +1,59 @@
+.container {
+  width: min(1120px, 92%);
+  margin: 0 auto;
+}
+
+.section {
+  padding: 88px 0;
+}
+
+.section-head {
+  max-width: 680px;
+  margin-bottom: 30px;
+}
+
+.section-head h2,
+.about h2,
+.booking h2,
+.contacts h2 {
+  font-size: clamp(2rem, 3.4vw, 3rem);
+  margin-bottom: 10px;
+}
+
+.section-head p {
+  color: var(--muted);
+}
+
+.about__grid,
+.booking__grid,
+.contacts__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  align-items: center;
+}
+
+.about__image img,
+.contacts__map iframe {
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.about__text p,
+.booking__info p,
+.contacts__info p {
+  color: var(--muted);
+}
+
+.rooms__grid,
+.amenities__grid,
+.gallery__grid {
+  display: grid;
+  gap: 20px;
+}
+
+.site-footer {
+  padding: 26px 0 38px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+}

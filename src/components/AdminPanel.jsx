@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useLang } from '../context/LangContext';
 import '../styles/AdminPanel.css';
 
 export default function AdminPanel() {
+  const { tr } = useLang();
   const [auth, setAuth] = useState(() => sessionStorage.getItem('admin_auth') === '1');
   const [mode, setMode] = useState('login'); // 'login', 'register', 'verify'
   const [email, setEmail] = useState('');
@@ -25,12 +27,12 @@ export default function AdminPanel() {
     setSuccess('');
     
     if (!email.includes('@')) {
-      setErr('Введите корректный email');
+      setErr(tr('Введите корректный email'));
       return;
     }
     
     if (!code) {
-      setErr('Введите код');
+      setErr(tr('Введите код'));
       return;
     }
     
@@ -44,7 +46,7 @@ export default function AdminPanel() {
       setEmail('');
       setCode('');
     } else {
-      setErr('Неверный email или код');
+      setErr(tr('Неверный email или код'));
     }
   }
 
@@ -54,26 +56,26 @@ export default function AdminPanel() {
     setSuccess('');
     
     if (!email.includes('@')) {
-      setErr('Введите корректный email');
+      setErr(tr('Введите корректный email'));
       return;
     }
     
     if (!code || code.length < 6) {
-      setErr('Код должен быть минимум 6 символов');
+      setErr(tr('Код должен быть минимум 6 символов'));
       return;
     }
     
     const adminEmails = JSON.parse(localStorage.getItem('admin_emails') || '[]');
     
     if (adminEmails.find(a => a.email === email)) {
-      setErr('Этот email уже зарегистрирован');
+      setErr(tr('Этот email уже зарегистрирован'));
       return;
     }
     
     adminEmails.push({ email, code });
     localStorage.setItem('admin_emails', JSON.stringify(adminEmails));
     
-    setSuccess('Учётная запись создана! Теперь войдите.');
+    setSuccess(tr('Учётная запись создана! Теперь войдите.'));
     setTimeout(() => {
       setMode('login');
       setEmail('');
@@ -88,12 +90,12 @@ export default function AdminPanel() {
     setSuccess('');
     
     if (!email.includes('@')) {
-      setErr('Введите корректный email');
+      setErr(tr('Введите корректный email'));
       return;
     }
     
     if (!verifyCode) {
-      setErr('Введите код для подтверждения');
+      setErr(tr('Введите код для подтверждения'));
       return;
     }
     
@@ -108,7 +110,7 @@ export default function AdminPanel() {
       setVerifyCode('');
       setSuccess('');
     } else {
-      setErr('Неверный код подтверждения');
+      setErr(tr('Неверный код подтверждения'));
     }
   }
 
@@ -138,7 +140,7 @@ export default function AdminPanel() {
           <div className="container">
             <div className="admin-auth-card">
               <div className="admin-auth-header">
-                <h1>Админ-панель</h1>
+                <h1>{tr('Админ-панель')}</h1>
                 <p>HOTEL KARAGAT KARAKOL</p>
               </div>
 
@@ -147,19 +149,19 @@ export default function AdminPanel() {
                   className={`admin-tab ${mode === 'login' ? 'active' : ''}`}
                   onClick={() => { setMode('login'); setErr(''); setSuccess(''); }}
                 >
-                  Войти
+                  {tr('Войти')}
                 </button>
                 <button
                   className={`admin-tab ${mode === 'register' ? 'active' : ''}`}
                   onClick={() => { setMode('register'); setErr(''); setSuccess(''); }}
                 >
-                  Регистрация
+                  {tr('Регистрация')}
                 </button>
                 <button
                   className={`admin-tab ${mode === 'verify' ? 'active' : ''}`}
                   onClick={() => { setMode('verify'); setErr(''); setSuccess(''); }}
                 >
-                  Подтверждение
+                  {tr('Подтверждение')}
                 </button>
               </div>
 
@@ -177,10 +179,10 @@ export default function AdminPanel() {
                   </div>
 
                   <div className="admin-form-group">
-                    <label>Код доступа</label>
+                    <label>{tr('Код доступа')}</label>
                     <input
                       type="password"
-                      placeholder="Введите код"
+                      placeholder={tr('Введите код')}
                       value={code}
                       onChange={e => setCode(e.target.value)}
                       className="admin-input"
@@ -191,7 +193,7 @@ export default function AdminPanel() {
                   {success && <div className="admin-success">{success}</div>}
 
                   <button type="submit" className="admin-btn admin-btn-primary">
-                    Войти
+                    {tr('Войти')}
                   </button>
                 </form>
               )}
@@ -210,10 +212,10 @@ export default function AdminPanel() {
                   </div>
 
                   <div className="admin-form-group">
-                    <label>Код доступа (минимум 6 символов)</label>
+                    <label>{tr('Код доступа (минимум 6 символов)')}</label>
                     <input
                       type="password"
-                      placeholder="Придумайте код"
+                      placeholder={tr('Придумайте код')}
                       value={code}
                       onChange={e => setCode(e.target.value)}
                       className="admin-input"
@@ -224,7 +226,7 @@ export default function AdminPanel() {
                   {success && <div className="admin-success">{success}</div>}
 
                   <button type="submit" className="admin-btn admin-btn-success">
-                    Зарегистрироваться
+                    {tr('Зарегистрироваться')}
                   </button>
                 </form>
               )}
@@ -243,10 +245,10 @@ export default function AdminPanel() {
                   </div>
 
                   <div className="admin-form-group">
-                    <label>Код подтверждения</label>
+                    <label>{tr('Код подтверждения')}</label>
                     <input
                       type="password"
-                      placeholder="Введите код"
+                      placeholder={tr('Введите код')}
                       value={verifyCode}
                       onChange={e => setVerifyCode(e.target.value)}
                       className="admin-input"
@@ -257,12 +259,12 @@ export default function AdminPanel() {
                   {success && <div className="admin-success">{success}</div>}
 
                   <button type="submit" className="admin-btn admin-btn-primary">
-                    Подтвердить
+                    {tr('Подтвердить')}
                   </button>
                 </form>
               )}
 
-              <p className="admin-hint">Используйте данные для входа в админ-панель</p>
+              <p className="admin-hint">{tr('Используйте данные для входа в админ-панель')}</p>
             </div>
           </div>
         </section>
@@ -275,9 +277,9 @@ export default function AdminPanel() {
       <section className="section admin-section">
         <div className="container">
           <div className="admin-header">
-            <h1>Админ-панель</h1>
+            <h1>{tr('Админ-панель')}</h1>
             <button className="admin-btn admin-btn-logout" onClick={logout}>
-              <i className="fa-solid fa-sign-out-alt"></i> Выйти
+              <i className="fa-solid fa-sign-out-alt"></i> {tr('Выйти')}
             </button>
           </div>
 
@@ -286,13 +288,13 @@ export default function AdminPanel() {
               className={`admin-tab-btn ${tab === 'bookings' ? 'active' : ''}`}
               onClick={() => setTab('bookings')}
             >
-              <i className="fa-solid fa-calendar-check"></i> Брони ({bookings.length})
+              <i className="fa-solid fa-calendar-check"></i> {tr('Брони')} ({bookings.length})
             </button>
             <button
               className={`admin-tab-btn ${tab === 'reviews' ? 'active' : ''}`}
               onClick={() => setTab('reviews')}
             >
-              <i className="fa-solid fa-star"></i> Отзывы ({reviews.length})
+              <i className="fa-solid fa-star"></i> {tr('Отзывы')} ({reviews.length})
             </button>
           </div>
 
@@ -302,7 +304,7 @@ export default function AdminPanel() {
               {bookings.length === 0 ? (
                 <div className="admin-empty">
                   <i className="fa-solid fa-inbox"></i>
-                  <p>Нет броней</p>
+                  <p>{tr('Нет броней')}</p>
                 </div>
               ) : (
                 <div className="admin-list">
@@ -313,17 +315,17 @@ export default function AdminPanel() {
                         <button
                           onClick={() => deleteBooking(b.id)}
                           className="admin-delete-btn"
-                          aria-label="Удалить"
+                          aria-label={tr('Удалить')}
                         >
                           <i className="fa-solid fa-trash"></i>
                         </button>
                       </div>
                       <div className="admin-card-info">
                         <p><strong>Email:</strong> {b.email}</p>
-                        <p><strong>Телефон:</strong> {b.phone}</p>
-                        <p><strong>Заезд:</strong> {b.checkIn} <strong>Выезд:</strong> {b.checkOut}</p>
-                        <p><strong>Гостей:</strong> {b.guests} | <strong>Тип номера:</strong> {b.roomType}</p>
-                        {b.comment && <p><strong>Комментарий:</strong> "{b.comment}"</p>}
+                        <p><strong>{tr('Телефон')}:</strong> {b.phone}</p>
+                        <p><strong>{tr('Заезд')}:</strong> {b.checkIn} <strong>{tr('Выезд')}:</strong> {b.checkOut}</p>
+                        <p><strong>{tr('Гостей')}:</strong> {b.guests} | <strong>{tr('Тип номера')}:</strong> {b.roomType}</p>
+                        {b.comment && <p><strong>{tr('Комментарий')}:</strong> "{b.comment}"</p>}
                       </div>
                     </div>
                   ))}
@@ -338,7 +340,7 @@ export default function AdminPanel() {
               {reviews.length === 0 ? (
                 <div className="admin-empty">
                   <i className="fa-solid fa-comments"></i>
-                  <p>Нет отзывов</p>
+                  <p>{tr('Нет отзывов')}</p>
                 </div>
               ) : (
                 <div className="admin-list">
@@ -354,7 +356,7 @@ export default function AdminPanel() {
                         <button
                           onClick={() => deleteReview(r.id)}
                           className="admin-delete-btn"
-                          aria-label="Удалить"
+                          aria-label={tr('Удалить')}
                         >
                           <i className="fa-solid fa-trash"></i>
                         </button>

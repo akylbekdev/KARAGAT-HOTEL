@@ -16,6 +16,7 @@ import Booking from './pages/Booking';
 
 export default function App() {
   const { pathname } = useLocation();
+  const isAdminRoute = pathname === '/admin';
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -24,8 +25,8 @@ export default function App() {
   return (
     <>
       <Loader />
-      <Header />
-      <Routes>
+      {!isAdminRoute && <Header />}
+      <Routes location={pathname} key={pathname}>
         <Route path="/" element={<Home />} />
         <Route path="/rooms" element={<Rooms />} />
         <Route path="/gallery" element={<Gallery />} />
@@ -35,9 +36,9 @@ export default function App() {
         <Route path="/booking" element={<Booking />} />
         <Route path="/admin" element={<AdminPanel />} />
       </Routes>
-      {pathname !== '/admin' && <Footer />}
-      <ToTop />
-      <WaFloat />
+      {!isAdminRoute && <Footer />}
+      {!isAdminRoute && <ToTop />}
+      {!isAdminRoute && <WaFloat />}
     </>
   );
 }

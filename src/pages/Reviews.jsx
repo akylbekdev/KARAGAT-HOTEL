@@ -118,10 +118,10 @@ export default function Reviews() {
                 <p className="text-muted">{tr('Пока отзывов нет. Будьте первым гостем, кто оставит отзыв.')}</p>
               ) : (
                 reviews.map(r => (
-                  <div key={r.id} style={{ marginBottom: '16px', borderBottom: '1px solid var(--border)', paddingBottom: '14px' }}>
+                  <div key={r.id} className="review-item">
                     <div className="review-stars">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</div>
-                    <p style={{ margin: '4px 0' }}>{r.text}</p>
-                    <span style={{ fontSize: '0.82rem', color: 'var(--muted)' }}>{r.name} · {r.date}</span>
+                    <p className="review-item__text">{r.text}</p>
+                    <span className="review-item__meta">{r.name} · {r.date}</span>
                   </div>
                 ))
               )}

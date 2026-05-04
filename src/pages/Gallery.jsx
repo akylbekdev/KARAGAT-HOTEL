@@ -2,28 +2,24 @@ import { useEffect, useState } from 'react';
 import { useLang } from '../context/LangContext';
 
 const allPhotos = [
-  { src: '/assets/photos/karagat-1.jpg', cat: 'exterior', alt: 'Отель Karagat вечером' },
-  { src: '/assets/photos/karagat-2.jpg', cat: 'interior', alt: 'Отель Karagat' },
-  { src: '/assets/photos/karagat-3.jpg', cat: 'exterior', alt: 'Отель Karagat' },
-  { src: '/assets/photos/karagat-4.jpg', cat: 'exterior', alt: 'Отель Karagat у воды' },
-  { src: '/assets/photos/karagat-5.jpg', cat: 'interior', alt: 'Отель Karagat' },
-  { src: '/assets/photos/karagat-6.jpg', cat: 'interior', alt: 'Отель Karagat' },
-  { src: '/assets/photos/karagat-7.jpg', cat: 'interior', alt: 'Отель Karagat' },
-  { src: '/assets/photos/karagat-8.jpg', cat: 'interior', alt: 'Отель Karagat' },
-  { src: '/assets/photos/karagat-b1.jpg', cat: 'interior', alt: 'Номер Karagat' },
-  { src: '/assets/photos/karagat-b2.jpg', cat: 'interior', alt: 'Номер Karagat' },
-  { src: '/assets/photos/karagat-b3.jpg', cat: 'interior', alt: 'Номер Karagat' },
-  { src: '/assets/photos/karagat-b4.jpg', cat: 'interior', alt: 'Номер Karagat' },
-  { src: '/assets/photos/karagat-b5.jpg', cat: 'interior', alt: 'Номер Karagat' },
-  { src: '/assets/photos/karagat-b6.jpg', cat: 'interior', alt: 'Номер Karagat' },
+  { src: '/assets/photos/1.jpg', cat: 'exterior', alt: 'Отель Karagat ночью' },
+  { src: '/assets/photos/2.jpg', cat: 'exterior', alt: 'Отель Karagat днём' },
+  { src: '/assets/photos/3.jpg', cat: 'exterior', alt: 'Отель Karagat на рассвете' },
+  { src: '/assets/photos/4.jpg', cat: 'exterior', alt: 'Отель Karagat вечером' },
+  { src: '/assets/photos/5.jpg', cat: 'exterior', alt: 'Отель Karagat фасад' },
+  { src: '/assets/photos/6.jpg', cat: 'exterior', alt: 'Территория отеля Karagat' },
+  { src: '/assets/photos/7.jpg', cat: 'exterior', alt: 'Площадь у отеля Karagat' },
+  { src: '/assets/photos/8.jpg', cat: 'exterior', alt: 'Отель Karagat ночная подсветка' },
+  { src: '/assets/photos/9.jpg', cat: 'exterior', alt: 'Отель Karagat вход' },
 ];
 
-const PAGE_SIZE = 8;
+const INITIAL = 3;
+const PAGE_SIZE = 6;
 
 export default function Gallery() {
   const { tr } = useLang();
   const [filter, setFilter] = useState('all');
-  const [shown, setShown] = useState(PAGE_SIZE);
+  const [shown, setShown] = useState(INITIAL);
   const [lightbox, setLightbox] = useState(null);
 
   const filtered = filter === 'all' ? allPhotos : allPhotos.filter(p => p.cat === filter);
@@ -63,7 +59,7 @@ export default function Gallery() {
                   key={key}
                   type="button"
                   className={filter === key ? 'active' : ''}
-                  onClick={() => { setFilter(key); setShown(PAGE_SIZE); }}
+                  onClick={() => { setFilter(key); setShown(INITIAL); }}
                 >
                   {tr(label)}
                 </button>
@@ -84,17 +80,26 @@ export default function Gallery() {
             ))}
           </div>
 
-          {shown < filtered.length && (
-            <div className="gallery-more-wrap reveal">
+          <div className="gallery-more-wrap reveal">
+            {shown < filtered.length && (
               <button
                 type="button"
                 className="btn btn--secondary"
-                onClick={() => setShown(s => s + PAGE_SIZE)}
+                onClick={() => setShown(filtered.length)}
               >
-                {tr('Показать еще')}
+                {tr('Показать ещё')}
               </button>
-            </div>
-          )}
+            )}
+            {shown >= filtered.length && filtered.length > INITIAL && (
+              <button
+                type="button"
+                className="btn btn--secondary"
+                onClick={() => { setShown(INITIAL); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              >
+                {tr('Показать меньше')}
+              </button>
+            )}
+          </div>
         </div>
       </section>
 

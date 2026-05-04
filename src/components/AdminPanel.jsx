@@ -5,10 +5,10 @@ import '../styles/AdminPanel.css';
 export default function AdminPanel() {
   const { tr } = useLang();
   const [auth, setAuth] = useState(() => sessionStorage.getItem('admin_auth') === '1');
-  const [mode, setMode] = useState('login'); // 'login', 'register', 'verify'
+  const [mode, setMode] = useState('login'); // 'login' | 'register'
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
-  const [verifyCode, setVerifyCode] = useState('');
+  const [showCode, setShowCode] = useState(false);
   const [err, setErr] = useState('');
   const [success, setSuccess] = useState('');
   const [bookings, setBookings] = useState([]);
@@ -21,96 +21,63 @@ export default function AdminPanel() {
     setReviews(JSON.parse(localStorage.getItem('karagat_reviews') || '[]'));
   }, [auth]);
 
-  function handleLogin(e) {
-    e.preventDefault();
+  function switchMode(m) {
+    setMode(m);
     setErr('');
     setSuccess('');
-    
-    if (!email.includes('@')) {
-      setErr(tr('Введите корректный email'));
-      return;
-    }
-    
-    if (!code) {
-      setErr(tr('Введите код'));
-      return;
-    }
-    
-    const adminEmails = JSON.parse(localStorage.getItem('admin_emails') || '[]');
-    const admin = adminEmails.find(a => a.email === email && a.code === code);
-    
-    if (admin) {
-      sessionStorage.setItem('admin_auth', '1');
-      sessionStorage.setItem('admin_email', email);
-      setAuth(true);
-      setEmail('');
-      setCode('');
-    } else {
-      setErr(tr('Неверный email или код'));
-    }
+    setEmail('');
+    setCode('');
+    setShowCode(false);
   }
 
-  function handleRegister(e) {
+  function handleSubmit(e) {
     e.preventDefault();
     setErr('');
     setSuccess('');
-    
-    if (!email.includes('@')) {
-      setErr(tr('Введите корректный email'));
-      return;
-    }
-    
-    if (!code || code.length < 6) {
-      setErr(tr('Код должен быть минимум 6 символов'));
-      return;
-    }
-    
-    const adminEmails = JSON.parse(localStorage.getItem('admin_emails') || '[]');
-    
-    if (adminEmails.find(a => a.email === email)) {
-      setErr(tr('Этот email уже зарегистрирован'));
-      return;
-    }
-    
-    adminEmails.push({ email, code });
-    localStorage.setItem('admin_emails', JSON.stringify(adminEmails));
-    
-    setSuccess(tr('Учётная запись создана! Теперь войдите.'));
-    setTimeout(() => {
-      setMode('login');
-      setEmail('');
-      setCode('');
-      setSuccess('');
-    }, 2000);
-  }
 
-  function handleVerify(e) {
-    e.preventDefault();
-    setErr('');
-    setSuccess('');
-    
-    if (!email.includes('@')) {
+    const normalizedEmail = email.trim().toLowerCase();
+    const trimmedCode = code.trim();
+    const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(normalizedEmail);
+
+    if (!validEmail) {
       setErr(tr('Введите корректный email'));
       return;
     }
-    
-    if (!verifyCode) {
-      setErr(tr('Введите код для подтверждения'));
+    if (!trimmedCode || trimmedCode.length < 8) {
+      setErr(tr('Код должен быть минимум 8 символов'));
       return;
     }
-    
+
+    const strongCode = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&._-]{8,}$/.test(trimmedCode);
+    if (mode === 'register' && !strongCode) {
+      setErr(tr('Код должен содержать минимум 8 символов, буквы и цифры'));
+      return;
+    }
+
     const adminEmails = JSON.parse(localStorage.getItem('admin_emails') || '[]');
-    const admin = adminEmails.find(a => a.email === email && a.code === verifyCode);
-    
-    if (admin) {
-      sessionStorage.setItem('admin_auth', '1');
-      sessionStorage.setItem('admin_email', email);
-      setAuth(true);
-      setEmail('');
-      setVerifyCode('');
-      setSuccess('');
+
+    if (mode === 'register') {
+      if (adminEmails.find(a => (a.email || '').toLowerCase() === normalizedEmail)) {
+        setErr(tr('Этот email уже зарегистрирован'));
+        return;
+      }
+      adminEmails.push({ email: normalizedEmail, code: trimmedCode });
+      localStorage.setItem('admin_emails', JSON.stringify(adminEmails));
+      setSuccess(tr('Аккаунт создан! Входим...'));
+      setTimeout(() => {
+        sessionStorage.setItem('admin_auth', '1');
+        sessionStorage.setItem('admin_email', normalizedEmail);
+        setAuth(true);
+      }, 1000);
     } else {
-      setErr(tr('Неверный код подтверждения'));
+      const admin = adminEmails.find(a => (a.email || '').toLowerCase() === normalizedEmail && a.code === trimmedCode);
+      if (admin) {
+        sessionStorage.setItem('admin_auth', '1');
+        sessionStorage.setItem('admin_email', normalizedEmail);
+        setAuth(true);
+      } else {
+        setErr(tr('Неверный email или код'));
+      }
     }
   }
 
@@ -118,261 +85,243 @@ export default function AdminPanel() {
     sessionStorage.removeItem('admin_auth');
     sessionStorage.removeItem('admin_email');
     setAuth(false);
+    setEmail('');
+    setCode('');
+    setShowCode(false);
     setMode('login');
   }
 
   function deleteBooking(id) {
+    if (!window.confirm(tr('Удалить эту бронь?'))) return;
     const next = bookings.filter(b => b.id !== id);
     localStorage.setItem('karagat_bookings', JSON.stringify(next));
     setBookings(next);
   }
 
   function deleteReview(id) {
+    if (!window.confirm(tr('Удалить этот отзыв?'))) return;
     const next = reviews.filter(r => r.id !== id);
     localStorage.setItem('karagat_reviews', JSON.stringify(next));
     setReviews(next);
   }
 
+  /* ── Auth screen ── */
   if (!auth) {
     return (
-      <main className="page-main admin-auth">
-        <section className="section admin-auth-section">
-          <div className="container">
-            <div className="admin-auth-card">
-              <div className="admin-auth-header">
-                <h1>{tr('Админ-панель')}</h1>
-                <p>HOTEL KARAGAT KARAKOL</p>
-              </div>
-
-              <div className="admin-auth-tabs">
-                <button
-                  className={`admin-tab ${mode === 'login' ? 'active' : ''}`}
-                  onClick={() => { setMode('login'); setErr(''); setSuccess(''); }}
-                >
-                  {tr('Войти')}
-                </button>
-                <button
-                  className={`admin-tab ${mode === 'register' ? 'active' : ''}`}
-                  onClick={() => { setMode('register'); setErr(''); setSuccess(''); }}
-                >
-                  {tr('Регистрация')}
-                </button>
-                <button
-                  className={`admin-tab ${mode === 'verify' ? 'active' : ''}`}
-                  onClick={() => { setMode('verify'); setErr(''); setSuccess(''); }}
-                >
-                  {tr('Подтверждение')}
-                </button>
-              </div>
-
-              {mode === 'login' && (
-                <form onSubmit={handleLogin} className="admin-form">
-                  <div className="admin-form-group">
-                    <label>Email</label>
-                    <input
-                      type="email"
-                      placeholder="admin@hotel.com"
-                      value={email}
-                      onChange={e => setEmail(e.target.value)}
-                      className="admin-input"
-                    />
-                  </div>
-
-                  <div className="admin-form-group">
-                    <label>{tr('Код доступа')}</label>
-                    <input
-                      type="password"
-                      placeholder={tr('Введите код')}
-                      value={code}
-                      onChange={e => setCode(e.target.value)}
-                      className="admin-input"
-                    />
-                  </div>
-
-                  {err && <div className="admin-error">{err}</div>}
-                  {success && <div className="admin-success">{success}</div>}
-
-                  <button type="submit" className="admin-btn admin-btn-primary">
-                    {tr('Войти')}
-                  </button>
-                </form>
-              )}
-
-              {mode === 'register' && (
-                <form onSubmit={handleRegister} className="admin-form">
-                  <div className="admin-form-group">
-                    <label>Email</label>
-                    <input
-                      type="email"
-                      placeholder="admin@hotel.com"
-                      value={email}
-                      onChange={e => setEmail(e.target.value)}
-                      className="admin-input"
-                    />
-                  </div>
-
-                  <div className="admin-form-group">
-                    <label>{tr('Код доступа (минимум 6 символов)')}</label>
-                    <input
-                      type="password"
-                      placeholder={tr('Придумайте код')}
-                      value={code}
-                      onChange={e => setCode(e.target.value)}
-                      className="admin-input"
-                    />
-                  </div>
-
-                  {err && <div className="admin-error">{err}</div>}
-                  {success && <div className="admin-success">{success}</div>}
-
-                  <button type="submit" className="admin-btn admin-btn-success">
-                    {tr('Зарегистрироваться')}
-                  </button>
-                </form>
-              )}
-
-              {mode === 'verify' && (
-                <form onSubmit={handleVerify} className="admin-form">
-                  <div className="admin-form-group">
-                    <label>Email</label>
-                    <input
-                      type="email"
-                      placeholder="admin@hotel.com"
-                      value={email}
-                      onChange={e => setEmail(e.target.value)}
-                      className="admin-input"
-                    />
-                  </div>
-
-                  <div className="admin-form-group">
-                    <label>{tr('Код подтверждения')}</label>
-                    <input
-                      type="password"
-                      placeholder={tr('Введите код')}
-                      value={verifyCode}
-                      onChange={e => setVerifyCode(e.target.value)}
-                      className="admin-input"
-                    />
-                  </div>
-
-                  {err && <div className="admin-error">{err}</div>}
-                  {success && <div className="admin-success">{success}</div>}
-
-                  <button type="submit" className="admin-btn admin-btn-primary">
-                    {tr('Подтвердить')}
-                  </button>
-                </form>
-              )}
-
-              <p className="admin-hint">{tr('Используйте данные для входа в админ-панель')}</p>
-            </div>
+      <main className="page-main ap-screen">
+        <div className="ap-card">
+          {/* Logo / title */}
+          <div className="ap-logo">
+            <span className="ap-logo__hotel">HOTEL</span>
+            <span className="ap-logo__name">KARAGAT</span>
+            <span className="ap-logo__sub">Karakol, Kyrgyzstan</span>
           </div>
-        </section>
+
+          {/* Mode switcher */}
+          <div className="ap-switcher">
+            <button
+              className={`ap-switcher__btn${mode === 'login' ? ' ap-switcher__btn--active' : ''}`}
+              onClick={() => switchMode('login')}
+            >
+              {tr('Войти')}
+            </button>
+            <button
+              className={`ap-switcher__btn${mode === 'register' ? ' ap-switcher__btn--active' : ''}`}
+              onClick={() => switchMode('register')}
+            >
+              {tr('Регистрация')}
+            </button>
+            <span
+              className="ap-switcher__slider"
+              style={{ transform: mode === 'register' ? 'translateX(100%)' : 'translateX(0)' }}
+            />
+          </div>
+
+
+          {/* Single form */}
+          <form className="ap-form" onSubmit={handleSubmit}>
+            <div className="ap-field">
+              <label className="ap-field__label">Email</label>
+              <div className="ap-field__wrap">
+                <i className="fa-regular fa-envelope ap-field__icon" />
+                <input
+                  type="email"
+                  className="ap-field__input"
+                  placeholder="admin@karagat.kg"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  autoComplete="email"
+                />
+              </div>
+            </div>
+
+            <div className="ap-field">
+              <label className="ap-field__label">
+                {mode === 'register' ? tr('Придумайте код (мин. 8 символов)') : tr('Код доступа')}
+              </label>
+              <div className="ap-field__wrap">
+                <i className="fa-solid fa-lock ap-field__icon" />
+                <input
+                  type={showCode ? 'text' : 'password'}
+                  className="ap-field__input"
+                  placeholder="••••••"
+                  value={code}
+                  onChange={e => setCode(e.target.value)}
+                  autoComplete={mode === 'register' ? 'new-password' : 'current-password'}
+                />
+                <button
+                  type="button"
+                  className="ap-field__toggle"
+                  aria-label={showCode ? tr('Скрыть код') : tr('Показать код')}
+                  onClick={() => setShowCode(v => !v)}
+                >
+                  <i className={`fa-solid ${showCode ? 'fa-eye-slash' : 'fa-eye'}`} />
+                </button>
+              </div>
+            </div>
+
+            {err && (
+              <div className="ap-msg ap-msg--err">
+                <i className="fa-solid fa-circle-exclamation" /> {err}
+              </div>
+            )}
+            {success && (
+              <div className="ap-msg ap-msg--ok">
+                <i className="fa-solid fa-circle-check" /> {success}
+              </div>
+            )}
+
+            <button type="submit" className="ap-submit">
+              {mode === 'register' ? tr('Создать аккаунт') : tr('Войти в панель')}
+              <i className="fa-solid fa-arrow-right" />
+            </button>
+          </form>
+        </div>
       </main>
     );
   }
 
+  /* ── Dashboard ── */
+  const adminEmail = sessionStorage.getItem('admin_email') || '';
+
   return (
-    <main className="page-main admin-dashboard">
-      <section className="section admin-section">
-        <div className="container">
-          <div className="admin-header">
-            <h1>{tr('Админ-панель')}</h1>
-            <button className="admin-btn admin-btn-logout" onClick={logout}>
-              <i className="fa-solid fa-sign-out-alt"></i> {tr('Выйти')}
-            </button>
+    <main className="page-main ap-dash">
+      <div className="container">
+
+        {/* Dashboard header */}
+        <div className="ap-dash__head">
+          <div className="ap-dash__title">
+            <span className="ap-dash__label">{tr('Админ-панель')}</span>
+            <span className="ap-dash__email">{adminEmail}</span>
           </div>
-
-          <div className="admin-tabs">
-            <button
-              className={`admin-tab-btn ${tab === 'bookings' ? 'active' : ''}`}
-              onClick={() => setTab('bookings')}
-            >
-              <i className="fa-solid fa-calendar-check"></i> {tr('Брони')} ({bookings.length})
-            </button>
-            <button
-              className={`admin-tab-btn ${tab === 'reviews' ? 'active' : ''}`}
-              onClick={() => setTab('reviews')}
-            >
-              <i className="fa-solid fa-star"></i> {tr('Отзывы')} ({reviews.length})
-            </button>
-          </div>
-
-          {/* Брони */}
-          {tab === 'bookings' && (
-            <div className="admin-content">
-              {bookings.length === 0 ? (
-                <div className="admin-empty">
-                  <i className="fa-solid fa-inbox"></i>
-                  <p>{tr('Нет броней')}</p>
-                </div>
-              ) : (
-                <div className="admin-list">
-                  {bookings.map(b => (
-                    <div key={b.id} className="admin-card">
-                      <div className="admin-card-header">
-                        <h3>{b.name}</h3>
-                        <button
-                          onClick={() => deleteBooking(b.id)}
-                          className="admin-delete-btn"
-                          aria-label={tr('Удалить')}
-                        >
-                          <i className="fa-solid fa-trash"></i>
-                        </button>
-                      </div>
-                      <div className="admin-card-info">
-                        <p><strong>Email:</strong> {b.email}</p>
-                        <p><strong>{tr('Телефон')}:</strong> {b.phone}</p>
-                        <p><strong>{tr('Заезд')}:</strong> {b.checkIn} <strong>{tr('Выезд')}:</strong> {b.checkOut}</p>
-                        <p><strong>{tr('Гостей')}:</strong> {b.guests} | <strong>{tr('Тип номера')}:</strong> {b.roomType}</p>
-                        {b.comment && <p><strong>{tr('Комментарий')}:</strong> "{b.comment}"</p>}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Отзывы */}
-          {tab === 'reviews' && (
-            <div className="admin-content">
-              {reviews.length === 0 ? (
-                <div className="admin-empty">
-                  <i className="fa-solid fa-comments"></i>
-                  <p>{tr('Нет отзывов')}</p>
-                </div>
-              ) : (
-                <div className="admin-list">
-                  {reviews.map(r => (
-                    <div key={r.id} className="admin-card">
-                      <div className="admin-card-header">
-                        <h3>
-                          {r.name}
-                          <span className="admin-rating">
-                            {'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}
-                          </span>
-                        </h3>
-                        <button
-                          onClick={() => deleteReview(r.id)}
-                          className="admin-delete-btn"
-                          aria-label={tr('Удалить')}
-                        >
-                          <i className="fa-solid fa-trash"></i>
-                        </button>
-                      </div>
-                      <div className="admin-card-info">
-                        <p className="admin-date">{r.date}</p>
-                        <p className="admin-review-text">"{r.text}"</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+          <button className="ap-logout" onClick={logout}>
+            <i className="fa-solid fa-right-from-bracket" />
+            {tr('Выйти')}
+          </button>
         </div>
-      </section>
+
+        {/* Tabs */}
+        <div className="ap-tabs">
+          <button
+            className={`ap-tabs__btn${tab === 'bookings' ? ' ap-tabs__btn--active' : ''}`}
+            onClick={() => setTab('bookings')}
+          >
+            <i className="fa-solid fa-calendar-check" />
+            {tr('Брони')}
+            <span className="ap-tabs__count">{bookings.length}</span>
+          </button>
+          <button
+            className={`ap-tabs__btn${tab === 'reviews' ? ' ap-tabs__btn--active' : ''}`}
+            onClick={() => setTab('reviews')}
+          >
+            <i className="fa-solid fa-star" />
+            {tr('Отзывы')}
+            <span className="ap-tabs__count">{reviews.length}</span>
+          </button>
+        </div>
+
+        {/* Bookings */}
+        {tab === 'bookings' && (
+          <div className="ap-list">
+            {bookings.length === 0 ? (
+              <div className="ap-empty">
+                <i className="fa-solid fa-inbox" />
+                <p>{tr('Броней пока нет')}</p>
+              </div>
+            ) : bookings.map(b => (
+              <div key={b.id} className="ap-item">
+                <div className="ap-item__head">
+                  <div className="ap-item__avatar">{b.name?.[0]?.toUpperCase()}</div>
+                  <div>
+                    <div className="ap-item__name">{b.name}</div>
+                    <div className="ap-item__meta">{b.email} · {b.phone}</div>
+                  </div>
+                  <button
+                    className="ap-item__del"
+                    onClick={() => deleteBooking(b.id)}
+                    aria-label={tr('Удалить')}
+                  >
+                    <i className="fa-solid fa-trash-can" />
+                  </button>
+                </div>
+                <div className="ap-item__body">
+                  <div className="ap-chip">
+                    <i className="fa-regular fa-calendar" />
+                    {b.checkIn} → {b.checkOut}
+                  </div>
+                  <div className="ap-chip">
+                    <i className="fa-solid fa-users" />
+                    {b.guests} {tr('гостей')}
+                  </div>
+                  <div className="ap-chip">
+                    <i className="fa-solid fa-bed" />
+                    {b.roomType}
+                  </div>
+                  {b.comment && (
+                    <div className="ap-item__comment">"{b.comment}"</div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Reviews */}
+        {tab === 'reviews' && (
+          <div className="ap-list">
+            {reviews.length === 0 ? (
+              <div className="ap-empty">
+                <i className="fa-solid fa-comments" />
+                <p>{tr('Отзывов пока нет')}</p>
+              </div>
+            ) : reviews.map(r => (
+              <div key={r.id} className="ap-item">
+                <div className="ap-item__head">
+                  <div className="ap-item__avatar">{r.name?.[0]?.toUpperCase()}</div>
+                  <div>
+                    <div className="ap-item__name">{r.name}</div>
+                    <div className="ap-item__stars">
+                      {'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}
+                    </div>
+                  </div>
+                  <button
+                    className="ap-item__del"
+                    onClick={() => deleteReview(r.id)}
+                    aria-label={tr('Удалить')}
+                  >
+                    <i className="fa-solid fa-trash-can" />
+                  </button>
+                </div>
+                <div className="ap-item__body">
+                  <p className="ap-item__review">"{r.text}"</p>
+                  <span className="ap-item__date">{r.date}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+      </div>
     </main>
   );
 }

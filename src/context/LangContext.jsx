@@ -285,6 +285,17 @@ function getDisplayName(code, locale) {
 
 function buildLanguages() {
   const codes = getRawLanguageCodes();
+  
+  const flagMap = {
+    'ru': '🇷🇺', 'en': '🇬🇧', 'kg': '🇰🇬',
+    'es': '🇪🇸', 'fr': '🇫🇷', 'de': '🇩🇪', 'it': '🇮🇹', 'pt': '🇵🇹',
+    'pl': '🇵🇱', 'uk': '🇺🇦', 'ja': '🇯🇵', 'zh': '🇨🇳', 'ko': '🇰🇷',
+    'ar': '🇸🇦', 'tr': '🇹🇷', 'th': '🇹🇭', 'vi': '🇻🇳', 'id': '🇮🇩',
+    'nl': '🇳🇱', 'sv': '🇸🇪', 'no': '🇳🇴', 'da': '🇩🇰', 'fi': '🇫🇮',
+    'el': '🇬🇷', 'he': '🇮🇱', 'hi': '🇮🇳', 'bn': '🇧🇩', 'pa': '🇮🇳',
+    'cs': '🇨🇿', 'sk': '🇸🇰', 'hu': '🇭🇺', 'ro': '🇷🇴', 'bg': '🇧🇬',
+  };
+  
   const mapped = codes.map(code => {
     const uiCode = code === 'ky' ? 'kg' : code;
     return {
@@ -292,7 +303,7 @@ function buildLanguages() {
       engineCode: code,
       name: getDisplayName(code, 'en'),
       native: getDisplayName(code, code),
-      flag: uiCode === 'ru' ? '🇷🇺' : uiCode === 'en' ? '🇬🇧' : uiCode === 'kg' ? '🇰🇬' : '🌐',
+      flag: flagMap[uiCode] || '🌐',
     };
   });
 

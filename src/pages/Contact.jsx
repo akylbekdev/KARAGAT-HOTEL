@@ -36,12 +36,14 @@ export default function Contact() {
       <section className="section">
         <div className="container">
           <h1 className="page-title reveal">{tr('Контакты')}</h1>
-          <div className="reveal">
+          <div className="reveal contact-card">
             <p className="text-muted"><strong>{tr('Телефон:')}</strong> +996 704 399 939</p>
             <p className="text-muted"><strong>Email:</strong> info@hotelkaragat.com</p>
             <p className="text-muted"><strong>{tr('Адрес:')}</strong> Абдрахманов 89А, Karakol 722200</p>
-            <Link to="/map" className="btn btn--secondary">{tr('Открыть раздел «Мы на карте»')}</Link>
-            <Link to="/booking" className="btn btn--primary" style={{ marginLeft: '1rem' }}>{tr('Забронировать')}</Link>
+            <div className="contact-actions">
+              <Link to="/map" className="btn btn--secondary">{tr('Открыть раздел «Мы на карте»')}</Link>
+              <Link to="/booking" className="btn btn--primary">{tr('Забронировать')}</Link>
+            </div>
           </div>
         </div>
       </section>

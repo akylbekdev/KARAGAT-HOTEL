@@ -393,9 +393,11 @@ function buildLanguages() {
     };
   });
 
+  const withFlagsOnly = mapped.filter(item => item.flag !== '🌐');
+
   const unique = [];
   const seen = new Set();
-  mapped.forEach(item => {
+  withFlagsOnly.forEach(item => {
     if (!seen.has(item.code)) {
       unique.push(item);
       seen.add(item.code);

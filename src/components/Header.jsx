@@ -104,7 +104,6 @@ export default function Header() {
             onClick={() => setLangOpen(true)}
           >
             <span className="lang-trigger__flag">{currentLang?.flag}</span>
-            <span className="lang-trigger__code">{lang.toUpperCase()}</span>
             <i className="fa-solid fa-chevron-down lang-trigger__chevron" />
           </button>
 

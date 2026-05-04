@@ -13,6 +13,14 @@ const DRAWER_ITEMS = [
   { to: '/booking', icon: 'fa-solid fa-calendar-check',  label: 'Бронь'       },
 ];
 
+function emojiToTwemojiUrl(emoji) {
+  if (!emoji || typeof emoji !== 'string') return '';
+  const codepoints = Array.from(emoji)
+    .map(ch => ch.codePointAt(0).toString(16))
+    .join('-');
+  return `https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/${codepoints}.svg`;
+}
+
 export default function Header() {
   const { dark, toggle } = useTheme();
   const { lang, changeLang, tr, languages } = useLang();
@@ -103,7 +111,9 @@ export default function Header() {
             aria-label="Выбрать язык"
             onClick={() => setLangOpen(true)}
           >
-            <span className="lang-trigger__flag">{currentLang?.flag}</span>
+            <span className="lang-trigger__flag" aria-hidden="true">
+              <img src={emojiToTwemojiUrl(currentLang?.flag)} alt="" loading="lazy" />
+            </span>
             <i className="fa-solid fa-chevron-down lang-trigger__chevron" />
           </button>
 
@@ -152,7 +162,9 @@ export default function Header() {
                 className={`lang-option${lang === l.code ? ' selected' : ''}`}
                 onClick={() => selectLang(l.code)}
               >
-                <span className="lang-option__flag">{l.flag}</span>
+                <span className="lang-option__flag" aria-hidden="true">
+                  <img src={emojiToTwemojiUrl(l.flag)} alt="" loading="lazy" />
+                </span>
                 <span className="lang-option__info">
                   <span className="lang-option__name">{l.native}</span>
                   <span className="lang-option__native">{l.name}</span>

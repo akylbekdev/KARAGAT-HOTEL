@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useLang } from '../context/LangContext';
 
 const SERVICES = [
@@ -53,6 +54,17 @@ const SERVICES = [
 
 export default function Services() {
   const { tr } = useLang();
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+      }),
+      { threshold: 0.1 }
+    );
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="page-main">

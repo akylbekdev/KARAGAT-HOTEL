@@ -287,26 +287,99 @@ function buildLanguages() {
   const codes = getRawLanguageCodes();
   
   const flagMap = {
-    'ru': '🇷🇺', 'en': '🇬🇧', 'kg': '🇰🇬',
-    'es': '🇪🇸', 'fr': '🇫🇷', 'de': '🇩🇪', 'it': '🇮🇹', 'pt': '🇵🇹',
-    'pl': '🇵🇱', 'uk': '🇺🇦', 'ja': '🇯🇵', 'zh': '🇨🇳', 'ko': '🇰🇷',
-    'ar': '🇸🇦', 'tr': '🇹🇷', 'th': '🇹🇭', 'vi': '🇻🇳', 'id': '🇮🇩',
-    'nl': '🇳🇱', 'sv': '🇸🇪', 'no': '🇳🇴', 'da': '🇩🇰', 'fi': '🇫🇮',
-    'el': '🇬🇷', 'he': '🇮🇱', 'hi': '🇮🇳', 'bn': '🇧🇩', 'pa': '🇮🇳',
-    'cs': '🇨🇿', 'sk': '🇸🇰', 'hu': '🇭🇺', 'ro': '🇷🇴', 'bg': '🇧🇬',
-    'af': '🇿🇦', 'am': '🇪🇹', 'as': '🇮🇳', 'az': '🇦🇿', 'be': '🇧🇾',
-    'bs': '🇧🇦', 'ca': '🇪🇸', 'cy': '🇬🇧', 'dv': '🇲🇻', 'et': '🇪🇪',
-    'eu': '🇪🇸', 'fa': '🇮🇷', 'fil': '🇵🇭', 'gl': '🇪🇸', 'gu': '🇮🇳',
-    'ha': '🇳🇬', 'hr': '🇭🇷', 'ht': '🇭🇹', 'hy': '🇦🇲', 'id': '🇮🇩',
-    'ig': '🇳🇬', 'is': '🇮🇸', 'jv': '🇮🇩', 'ka': '🇬🇪', 'kk': '🇰🇿',
-    'km': '🇰🇭', 'kn': '🇮🇳', 'ku': '🇮🇶', 'lb': '🇱🇺', 'lo': '🇱🇦',
-    'lt': '🇱🇹', 'lv': '🇱🇻', 'mk': '🇲🇰', 'ml': '🇮🇳', 'mn': '🇲🇳',
-    'mr': '🇮🇳', 'ms': '🇲🇾', 'mt': '🇲🇹', 'my': '🇲🇲', 'ne': '🇳🇵',
-    'or': '🇮🇳', 'ps': '🇦🇫', 'qu': '🇵🇪', 'si': '🇱🇰', 'so': '🇸🇴',
-    'sq': '🇦🇱', 'sr': '🇷🇸', 'su': '🇮🇩', 'sw': '🇰🇪', 'ta': '🇮🇳',
-    'te': '🇮🇳', 'tg': '🇹🇯', 'ti': '🇪🇷', 'tk': '🇹🇲', 'tl': '🇵🇭',
-    'tr': '🇹🇷', 'tt': '🇷🇺', 'ug': '🇨🇳', 'ur': '🇵🇰', 'uz': '🇺🇿',
-    'yo': '🇳🇬', 'zu': '🇿🇦',
+    'ru': String.fromCodePoint(0x1F1F7, 0x1F1FA), // 🇷🇺
+    'en': String.fromCodePoint(0x1F1EC, 0x1F1E7), // 🇬🇧
+    'kg': String.fromCodePoint(0x1F1F0, 0x1F1EC), // 🇰🇬
+    'es': String.fromCodePoint(0x1F1EA, 0x1F1F8), // 🇪🇸
+    'fr': String.fromCodePoint(0x1F1EB, 0x1F1F7), // 🇫🇷
+    'de': String.fromCodePoint(0x1F1E9, 0x1F1EA), // 🇩🇪
+    'it': String.fromCodePoint(0x1F1EE, 0x1F1F9), // 🇮🇹
+    'pt': String.fromCodePoint(0x1F1F5, 0x1F1F9), // 🇵🇹
+    'pl': String.fromCodePoint(0x1F1F5, 0x1F1F1), // 🇵🇱
+    'uk': String.fromCodePoint(0x1F1FA, 0x1F1E6), // 🇺🇦
+    'ja': String.fromCodePoint(0x1F1EF, 0x1F1F5), // 🇯🇵
+    'zh': String.fromCodePoint(0x1F1E8, 0x1F1F3), // 🇨🇳
+    'ko': String.fromCodePoint(0x1F1F0, 0x1F1F7), // 🇰🇷
+    'ar': String.fromCodePoint(0x1F1F8, 0x1F1E6), // 🇸🇦
+    'tr': String.fromCodePoint(0x1F1F9, 0x1F1F7), // 🇹🇷
+    'th': String.fromCodePoint(0x1F1F9, 0x1F1ED), // 🇹🇭
+    'vi': String.fromCodePoint(0x1F1FB, 0x1F1F3), // 🇻🇳
+    'id': String.fromCodePoint(0x1F1EE, 0x1F1E9), // 🇮🇩
+    'nl': String.fromCodePoint(0x1F1F3, 0x1F1F1), // 🇳🇱
+    'sv': String.fromCodePoint(0x1F1F8, 0x1F1EA), // 🇸🇪
+    'no': String.fromCodePoint(0x1F1F3, 0x1F1F4), // 🇳🇴
+    'da': String.fromCodePoint(0x1F1E9, 0x1F1F0), // 🇩🇰
+    'fi': String.fromCodePoint(0x1F1EB, 0x1F1EE), // 🇫🇮
+    'el': String.fromCodePoint(0x1F1EC, 0x1F1F7), // 🇬🇷
+    'he': String.fromCodePoint(0x1F1EE, 0x1F1F1), // 🇮🇱
+    'hi': String.fromCodePoint(0x1F1EE, 0x1F1F3), // 🇮🇳
+    'bn': String.fromCodePoint(0x1F1E7, 0x1F1E9), // 🇧🇩
+    'pa': String.fromCodePoint(0x1F1EE, 0x1F1F3), // 🇮🇳
+    'cs': String.fromCodePoint(0x1F1E8, 0x1F1FF), // 🇨🇿
+    'sk': String.fromCodePoint(0x1F1F8, 0x1F1F0), // 🇸🇰
+    'hu': String.fromCodePoint(0x1F1ED, 0x1F1FA), // 🇭🇺
+    'ro': String.fromCodePoint(0x1F1F7, 0x1F1F4), // 🇷🇴
+    'bg': String.fromCodePoint(0x1F1E7, 0x1F1EC), // 🇧🇬
+    'af': String.fromCodePoint(0x1F1FF, 0x1F1E6), // 🇿🇦
+    'am': String.fromCodePoint(0x1F1EA, 0x1F1F9), // 🇪🇹
+    'as': String.fromCodePoint(0x1F1EE, 0x1F1F3), // 🇮🇳
+    'az': String.fromCodePoint(0x1F1E6, 0x1F1FF), // 🇦🇿
+    'be': String.fromCodePoint(0x1F1E7, 0x1F1FE), // 🇧🇾
+    'bs': String.fromCodePoint(0x1F1E7, 0x1F1E6), // 🇧🇦
+    'ca': String.fromCodePoint(0x1F1EA, 0x1F1F8), // 🇪🇸
+    'cy': String.fromCodePoint(0x1F1EC, 0x1F1E7), // 🇬🇧
+    'dv': String.fromCodePoint(0x1F1F2, 0x1F1FB), // 🇲🇻
+    'et': String.fromCodePoint(0x1F1EA, 0x1F1EA), // 🇪🇪
+    'eu': String.fromCodePoint(0x1F1EA, 0x1F1F8), // 🇪🇸
+    'fa': String.fromCodePoint(0x1F1EE, 0x1F1F7), // 🇮🇷
+    'fil': String.fromCodePoint(0x1F1F5, 0x1F1ED), // 🇵🇭
+    'gl': String.fromCodePoint(0x1F1EA, 0x1F1F8), // 🇪🇸
+    'gu': String.fromCodePoint(0x1F1EE, 0x1F1F3), // 🇮🇳
+    'ha': String.fromCodePoint(0x1F1F3, 0x1F1EC), // 🇳🇬
+    'hr': String.fromCodePoint(0x1F1ED, 0x1F1F7), // 🇭🇷
+    'ht': String.fromCodePoint(0x1F1ED, 0x1F1F9), // 🇭🇹
+    'hy': String.fromCodePoint(0x1F1E6, 0x1F1F2), // 🇦🇲
+    'ig': String.fromCodePoint(0x1F1F3, 0x1F1EC), // 🇳🇬
+    'is': String.fromCodePoint(0x1F1EE, 0x1F1F8), // 🇮🇸
+    'jv': String.fromCodePoint(0x1F1EE, 0x1F1E9), // 🇮🇩
+    'ka': String.fromCodePoint(0x1F1EC, 0x1F1EA), // 🇬🇪
+    'kk': String.fromCodePoint(0x1F1F0, 0x1F1FF), // 🇰🇿
+    'km': String.fromCodePoint(0x1F1F0, 0x1F1ED), // 🇰🇭
+    'kn': String.fromCodePoint(0x1F1EE, 0x1F1F3), // 🇮🇳
+    'ku': String.fromCodePoint(0x1F1EE, 0x1F1F6), // 🇮🇶
+    'lb': String.fromCodePoint(0x1F1F1, 0x1F1FA), // 🇱🇺
+    'lo': String.fromCodePoint(0x1F1F1, 0x1F1E6), // 🇱🇦
+    'lt': String.fromCodePoint(0x1F1F1, 0x1F1F9), // 🇱🇹
+    'lv': String.fromCodePoint(0x1F1F1, 0x1F1FB), // 🇱🇻
+    'mk': String.fromCodePoint(0x1F1F2, 0x1F1F0), // 🇲🇰
+    'ml': String.fromCodePoint(0x1F1EE, 0x1F1F3), // 🇮🇳
+    'mn': String.fromCodePoint(0x1F1F2, 0x1F1F3), // 🇲🇳
+    'mr': String.fromCodePoint(0x1F1EE, 0x1F1F3), // 🇮🇳
+    'ms': String.fromCodePoint(0x1F1F2, 0x1F1FE), // 🇲🇾
+    'mt': String.fromCodePoint(0x1F1F2, 0x1F1F9), // 🇲🇹
+    'my': String.fromCodePoint(0x1F1F2, 0x1F1F2), // 🇲🇲
+    'ne': String.fromCodePoint(0x1F1F3, 0x1F1F5), // 🇳🇵
+    'or': String.fromCodePoint(0x1F1EE, 0x1F1F3), // 🇮🇳
+    'ps': String.fromCodePoint(0x1F1E6, 0x1F1EB), // 🇦🇫
+    'qu': String.fromCodePoint(0x1F1F5, 0x1F1EA), // 🇵🇪
+    'si': String.fromCodePoint(0x1F1F1, 0x1F1F0), // 🇱🇰
+    'so': String.fromCodePoint(0x1F1F8, 0x1F1F4), // 🇸🇴
+    'sq': String.fromCodePoint(0x1F1E6, 0x1F1F1), // 🇦🇱
+    'sr': String.fromCodePoint(0x1F1F7, 0x1F1F8), // 🇷🇸
+    'su': String.fromCodePoint(0x1F1EE, 0x1F1E9), // 🇮🇩
+    'sw': String.fromCodePoint(0x1F1F0, 0x1F1EA), // 🇰🇪
+    'ta': String.fromCodePoint(0x1F1EE, 0x1F1F3), // 🇮🇳
+    'te': String.fromCodePoint(0x1F1EE, 0x1F1F3), // 🇮🇳
+    'tg': String.fromCodePoint(0x1F1F9, 0x1F1EF), // 🇹🇯
+    'ti': String.fromCodePoint(0x1F1EA, 0x1F1F7), // 🇪🇷
+    'tk': String.fromCodePoint(0x1F1F9, 0x1F1F2), // 🇹🇲
+    'tl': String.fromCodePoint(0x1F1F5, 0x1F1ED), // 🇵🇭
+    'tt': String.fromCodePoint(0x1F1F7, 0x1F1FA), // 🇷🇺
+    'ug': String.fromCodePoint(0x1F1E8, 0x1F1F3), // 🇨🇳
+    'ur': String.fromCodePoint(0x1F1F5, 0x1F1F0), // 🇵🇰
+    'uz': String.fromCodePoint(0x1F1FA, 0x1F1FF), // 🇺🇿
+    'yo': String.fromCodePoint(0x1F1F3, 0x1F1EC), // 🇳🇬
+    'zu': String.fromCodePoint(0x1F1FF, 0x1F1E6), // 🇿🇦
   };
   
   const mapped = codes.map(code => {

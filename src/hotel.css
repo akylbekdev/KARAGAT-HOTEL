@@ -886,7 +886,7 @@ p { margin-top: 0; }
   white-space: nowrap;
 }
 .lang-trigger:hover { border-color: var(--gold); }
-.lang-trigger__flag { font-size: 1.1rem; line-height: 1; }
+.lang-trigger__flag { font-size: 1.4rem; line-height: 1; }
 .lang-trigger__chevron { font-size: 0.65rem; opacity: 0.6; }
 
 /* ── Lang Modal Overlay ── */

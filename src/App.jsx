@@ -13,6 +13,7 @@ import Contact from './pages/Contact';
 import MapPage from './pages/MapPage';
 import Reviews from './pages/Reviews';
 import Booking from './pages/Booking';
+import Services from './pages/Services';
 
 export default function App() {
   const { pathname } = useLocation();
@@ -33,6 +34,7 @@ export default function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/map" element={<MapPage />} />
         <Route path="/reviews" element={<Reviews />} />
+        <Route path="/services" element={<Services />} />
         <Route path="/booking" element={<Booking />} />
         <Route path="/admin" element={<AdminPanel />} />
       </Routes>

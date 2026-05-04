@@ -11,7 +11,7 @@ function getAvailability() {
     d.setDate(d.getDate() + i);
     const dateStr = d.toISOString().split('T')[0];
     const label = d.toLocaleDateString('ru-RU', { weekday: 'short', day: 'numeric', month: 'short' });
-    const busy = bookings.some(b => dateStr >= b.checkin && dateStr < b.checkout);
+    const busy = bookings.some(b => dateStr >= (b.checkin || b.checkout) && dateStr < (b.checkout || b.checkin));
     items.push({ dateStr, label, busy });
   }
   return items;
@@ -19,7 +19,7 @@ function getAvailability() {
 
 export default function Booking() {
   const { tr } = useLang();
-  const [form, setForm] = useState({ name: '', phone: '', checkin: '', checkout: '', guests: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', checkin: '', checkout: '', guests: '', roomType: '', comment: '' });
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
   const [availability, setAvailability] = useState(getAvailability);
@@ -41,8 +41,8 @@ export default function Booking() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    const { name, phone, checkin, checkout, guests } = form;
-    if (!name || !phone || !checkin || !checkout || !guests) {
+    const { name, email, phone, checkin, checkout, guests, roomType } = form;
+    if (!name || !email || !phone || !checkin || !checkout || !guests || !roomType) {
       setMessage(tr('Пожалуйста, заполните все поля.'));
       setMessageType('error');
       return;
@@ -59,10 +59,22 @@ export default function Booking() {
       setMessageType('error');
       return;
     }
-    bookings.push({ checkin, checkout, name });
+    bookings.push({ 
+      id: Date.now(),
+      checkin, 
+      checkout, 
+      name, 
+      email, 
+      phone,
+      guests,
+      roomType,
+      comment: form.comment || '',
+      status: 'new',
+      date: new Date().toLocaleDateString('ru-RU')
+    });
     localStorage.setItem(BOOKINGS_KEY, JSON.stringify(bookings));
     setAvailability(getAvailability());
-    setForm({ name: '', phone: '', checkin: '', checkout: '', guests: '' });
+    setForm({ name: '', email: '', phone: '', checkin: '', checkout: '', guests: '', roomType: '', comment: '' });
     setMessage(tr('Бронь отправлена! Мы свяжемся с вами для подтверждения.'));
     setMessageType('success');
     setTimeout(() => setMessage(''), 6000);
@@ -97,6 +109,10 @@ export default function Booking() {
                 <input type="text" name="name" placeholder={tr('Например: Айгерим')} required value={form.name} onChange={handleChange} />
               </div>
               <div className="booking-form__field">
+                <label>Email</label>
+                <input type="email" name="email" placeholder="hotel@example.com" required value={form.email} onChange={handleChange} />
+              </div>
+              <div className="booking-form__field">
                 <label>{tr('Телефон')}</label>
                 <input type="tel" name="phone" placeholder="+996 700 123 456" required value={form.phone} onChange={handleChange} />
               </div>
@@ -113,6 +129,19 @@ export default function Booking() {
               <div className="booking-form__field">
                 <label>{tr('Кол-во гостей')}</label>
                 <input type="number" name="guests" min="1" max="8" required value={form.guests} onChange={handleChange} />
+              </div>
+              <div className="booking-form__field">
+                <label>{tr('Тип номера')}</label>
+                <select name="roomType" required value={form.roomType} onChange={handleChange} style={{width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)'}}>
+                  <option value="">-- {tr('Выберите номер')} --</option>
+                  <option value="Стандарт">Стандарт (22м²)</option>
+                  <option value="Семейный">Семейный (36м²)</option>
+                  <option value="Улучшенный">Улучшенный (45м²)</option>
+                </select>
+              </div>
+              <div className="booking-form__field">
+                <label>{tr('Комментарий')} (опционально)</label>
+                <textarea name="comment" rows={3} placeholder={tr('Дополнительные пожелания...')} value={form.comment} onChange={handleChange} style={{width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', fontFamily: 'inherit'}} />
               </div>
 
               <button type="submit" className="btn btn--primary btn--full">{tr('Отправить бронь')}</button>

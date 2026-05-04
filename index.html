@@ -3,13 +3,60 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="HOTEL KARAGAT KARAKOL - премиальный отель в Караколе. Уютные номера, высокий сервис и удобное бронирование." />
-    <title>HOTEL KARAGAT KARAKOL</title>
+    <meta name="description" content="HOTEL KARAGAT KARAKOL - премиальный отель в Караколе. Уютные номера, высокий сервис, онлайн-бронирование. Забронируйте сейчас!" />
+    <meta name="keywords" content="отель Караколь, гостиница Карагат, номера Каракол, бронирование отеля, путешествие Кыргызстан" />
+    <meta name="author" content="Hotel Karagat" />
+    <meta name="theme-color" content="#2a2432" />
+    <link rel="canonical" href="https://karagat-hotel.vercel.app" />
+    
+    <!-- Open Graph для соцсетей -->
+    <meta property="og:title" content="HOTEL KARAGAT KARAKOL - Премиальный отель в Караколе" />
+    <meta property="og:description" content="Уютные номера, высокий сервис и удобное онлайн-бронирование. Откройте для себя отель Карагат." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://karagat-hotel.vercel.app" />
+    <meta property="og:image" content="https://karagat-hotel.vercel.app/assets/logo.svg" />
+    <meta property="og:site_name" content="Hotel Karagat Karakol" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="HOTEL KARAGAT KARAKOL" />
+    <meta name="twitter:description" content="Премиальный отель в Караколе. Забронируйте номер сейчас!" />
+    
+    <!-- Schema.org Hotel markup -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Hotel",
+      "name": "Hotel Karagat Karakol",
+      "description": "Премиальный отель в Караколе, Кыргызстан",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Караколь, Кыргызстан",
+        "addressLocality": "Караколь",
+        "addressCountry": "KG"
+      },
+      "priceRange": "$",
+      "url": "https://karagat-hotel.vercel.app",
+      "telephone": "+996-555-123456",
+      "amenities": ["WiFi", "Parking", "Restaurant", "Bar", "Conference Room"],
+      "image": "https://karagat-hotel.vercel.app/assets/logo.svg"
+    }
+    </script>
+
+    <title>HOTEL KARAGAT KARAKOL - Отель в Караколе</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <meta name="theme-color" content="#2a2432" />
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX'); // Замените на ваш GA4 ID
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -105,6 +105,35 @@ export default function AdminPanel() {
     setReviews(next);
   }
 
+  function updateBookingStatus(id, status) {
+    const next = bookings.map(b => b.id === id ? { ...b, status } : b);
+    localStorage.setItem('karagat_bookings', JSON.stringify(next));
+    setBookings(next);
+  }
+
+  function approveReview(id) {
+    const next = reviews.map(r => r.id === id ? { ...r, approved: true } : r);
+    localStorage.setItem('karagat_reviews', JSON.stringify(next));
+    setReviews(next);
+  }
+
+  function rejectReview(id) {
+    const next = reviews.filter(r => r.id !== id);
+    localStorage.setItem('karagat_reviews', JSON.stringify(next));
+    setReviews(next);
+  }
+
+  const getStatusColor = (status) => {
+    const colors = {
+      'new': '#c9a36a',
+      'confirmed': '#4CAF50',
+      'checked-in': '#2196F3',
+      'checked-out': '#9C27B0',
+      'cancelled': '#f44336'
+    };
+    return colors[status] || '#666';
+  };
+
   /* ── Auth screen ── */
   if (!auth) {
     return (
@@ -256,6 +285,21 @@ export default function AdminPanel() {
                     <div className="ap-item__name">{b.name}</div>
                     <div className="ap-item__meta">{b.email} · {b.phone}</div>
                   </div>
+                  <div className="ap-item__status" style={{
+                    background: getStatusColor(b.status || 'new'),
+                    color: '#fff',
+                    padding: '6px 12px',
+                    borderRadius: '12px',
+                    fontSize: '0.85rem',
+                    fontWeight: '600',
+                    whiteSpace: 'nowrap'
+                  }}>
+                    {b.status === 'new' && tr('Новая')}
+                    {b.status === 'confirmed' && tr('Подтверждена')}
+                    {b.status === 'checked-in' && 'Checked-in'}
+                    {b.status === 'checked-out' && 'Checked-out'}
+                    {b.status === 'cancelled' && tr('Отменена')}
+                  </div>
                   <button
                     className="ap-item__del"
                     onClick={() => deleteBooking(b.id)}
@@ -280,6 +324,31 @@ export default function AdminPanel() {
                   {b.comment && (
                     <div className="ap-item__comment">"{b.comment}"</div>
                   )}
+                  <div style={{marginTop: '10px', display: 'flex', gap: '8px', flexWrap: 'wrap'}}>
+                    {['new', 'confirmed', 'checked-in', 'checked-out', 'cancelled'].map(st => (
+                      <button
+                        key={st}
+                        onClick={() => updateBookingStatus(b.id, st)}
+                        style={{
+                          padding: '6px 10px',
+                          borderRadius: '8px',
+                          border: `2px solid ${getStatusColor(st)}`,
+                          background: b.status === st ? getStatusColor(st) : 'transparent',
+                          color: b.status === st ? '#fff' : getStatusColor(st),
+                          cursor: 'pointer',
+                          fontSize: '0.8rem',
+                          fontWeight: '500',
+                          transition: 'all 0.2s'
+                        }}
+                      >
+                        {st === 'new' && tr('Новая')}
+                        {st === 'confirmed' && tr('Подтверждена')}
+                        {st === 'checked-in' && 'In'}
+                        {st === 'checked-out' && 'Out'}
+                        {st === 'cancelled' && tr('Отменить')}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             ))}
@@ -295,22 +364,64 @@ export default function AdminPanel() {
                 <p>{tr('Отзывов пока нет')}</p>
               </div>
             ) : reviews.map(r => (
-              <div key={r.id} className="ap-item">
+              <div key={r.id} className="ap-item" style={{
+                opacity: r.approved ? 0.6 : 1,
+                borderLeft: `4px solid ${r.approved ? '#4CAF50' : '#ff9800'}`
+              }}>
                 <div className="ap-item__head">
                   <div className="ap-item__avatar">{r.name?.[0]?.toUpperCase()}</div>
-                  <div>
-                    <div className="ap-item__name">{r.name}</div>
+                  <div style={{flex: 1}}>
+                    <div className="ap-item__name">
+                      {r.name} 
+                      {r.approved && <span style={{marginLeft: '8px', color: '#4CAF50', fontSize: '0.9rem'}}>✓ {tr('Опубликовано')}</span>}
+                    </div>
                     <div className="ap-item__stars">
                       {'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}
                     </div>
                   </div>
-                  <button
-                    className="ap-item__del"
-                    onClick={() => deleteReview(r.id)}
-                    aria-label={tr('Удалить')}
-                  >
-                    <i className="fa-solid fa-trash-can" />
-                  </button>
+                  {!r.approved && (
+                    <div style={{display: 'flex', gap: '8px'}}>
+                      <button
+                        onClick={() => approveReview(r.id)}
+                        style={{
+                          padding: '6px 12px',
+                          borderRadius: '8px',
+                          border: 'none',
+                          background: '#4CAF50',
+                          color: '#fff',
+                          cursor: 'pointer',
+                          fontSize: '0.85rem',
+                          fontWeight: '600'
+                        }}
+                      >
+                        <i className="fa-solid fa-check" /> {tr('Одобрить')}
+                      </button>
+                      <button
+                        onClick={() => rejectReview(r.id)}
+                        style={{
+                          padding: '6px 12px',
+                          borderRadius: '8px',
+                          border: 'none',
+                          background: '#f44336',
+                          color: '#fff',
+                          cursor: 'pointer',
+                          fontSize: '0.85rem',
+                          fontWeight: '600'
+                        }}
+                      >
+                        <i className="fa-solid fa-times" /> {tr('Отклонить')}
+                      </button>
+                    </div>
+                  )}
+                  {r.approved && (
+                    <button
+                      className="ap-item__del"
+                      onClick={() => deleteReview(r.id)}
+                      aria-label={tr('Удалить')}
+                    >
+                      <i className="fa-solid fa-trash-can" />
+                    </button>
+                  )}
                 </div>
                 <div className="ap-item__body">
                   <p className="ap-item__review">"{r.text}"</p>

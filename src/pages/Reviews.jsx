@@ -59,6 +59,7 @@ export default function Reviews() {
       text: text.trim(),
       rating,
       date: new Date().toLocaleDateString('ru-RU'),
+      approved: false,
     };
     const updated = [newReview, ...reviews];
     setReviews(updated);
@@ -117,13 +118,17 @@ export default function Reviews() {
               {reviews.length === 0 ? (
                 <p className="text-muted">{tr('Пока отзывов нет. Будьте первым гостем, кто оставит отзыв.')}</p>
               ) : (
-                reviews.map(r => (
-                  <div key={r.id} className="review-item">
-                    <div className="review-stars">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</div>
-                    <p className="review-item__text">{r.text}</p>
-                    <span className="review-item__meta">{r.name} · {r.date}</span>
-                  </div>
-                ))
+                reviews.filter(r => r.approved).length === 0 ? (
+                  <p className="text-muted">{tr('Пока отзывов нет. Будьте первым гостем, кто оставит отзыв.')}</p>
+                ) : (
+                  reviews.filter(r => r.approved).map(r => (
+                    <div key={r.id} className="review-item">
+                      <div className="review-stars">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</div>
+                      <p className="review-item__text">{r.text}</p>
+                      <span className="review-item__meta">{r.name} · {r.date}</span>
+                    </div>
+                  ))
+                )
               )}
             </div>
           </div>
